@@ -4,7 +4,7 @@
 
 Aplicativo mobile gamificado para aprendizado de inglês técnico voltado para profissionais e estudantes de TI.
 
-> **Projeto Integrador V** — Engenharia de Software (6º semestre)  
+> **Projeto Integrador VI** — Engenharia de Software (6º semestre)  
 > **Orientador:** Prof. Brendo Vale  
 > **Equipe:** alGURItmo
 
