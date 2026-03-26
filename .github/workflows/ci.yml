@@ -22,10 +22,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Instalar dependências
-        run: npm ci
+        run: npm install
 
       - name: Verificar sintaxe JavaScript
         run: node --check server.js
@@ -85,10 +84,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Instalar dependências
-        run: npm ci
+        run: npm install
 
       - name: Aguardar PostgreSQL
         run: |
