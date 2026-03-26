@@ -175,7 +175,7 @@ two-bee-dev/
 
 ## 📄 Licença
 
-Este projeto é desenvolvido para fins acadêmicos como parte do Projeto Integrador V.
+Este projeto é desenvolvido para fins acadêmicos como parte do Projeto Integrador VI.
 
 ---
 
