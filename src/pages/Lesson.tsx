@@ -57,10 +57,20 @@ const Lesson = () => {
   return (
     <MobileShell>
       <div className="flex min-h-screen flex-col bg-slate-950 p-5 justify-center">
-        {/* contador */}
-        <p className="text-slate-400 text-sm mb-4">
-          {currentIndex + 1}/{totalQuestions} - {fase.title}
-        </p>
+
+       {/* barra de progresso */}
+        <div className="mb-6">
+          <div className="flex justify-between text-sm text-slate-400 mb-2">
+            <span>{fase.title}</span>
+            <span>{currentIndex + 1}/{totalQuestions}</span>
+          </div>
+          <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-purple-500 rounded-full transition-all"
+              style={{ width: `${((currentIndex + 1) / totalQuestions) * 100}%` }}
+            />
+          </div>
+        </div>
 
         {/* pergunta */}
         <h2 className="text-white text-xl font-bold mb-6">
@@ -74,7 +84,15 @@ const Lesson = () => {
               key={index}
               onClick={() => handleAnswer(index)}
               disabled={selected !== null}
-              className="bg-slate-800 text-white p-4 rounded-xl text-left"
+              className={`${
+                selected !== null
+                  ? index === question.correctAnswer
+                    ? "bg-green-600"
+                    : index === selected
+                    ? "bg-red-600"
+                    : "bg-slate-800"
+                  : "bg-slate-800"
+              } text-white p-4 rounded-xl text-left transition-colors disabled:cursor-default`}
             >
               {option}
             </button>
