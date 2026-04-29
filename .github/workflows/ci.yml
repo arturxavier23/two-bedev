@@ -1,0 +1,33 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint-and-test:
+    name: Lint e Testes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do codigo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Rodar lint
+        run: npm run lint
+
+      - name: Rodar testes
+        run: npm run test
+
+      - name: Build de producao
+        run: npm run build
