@@ -3,68 +3,9 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Check, Lock, Play } from "lucide-react";
 import MobileShell from "@/components/MobileShell";
 import { getModuleTheme } from "@/lib/moduleThemes";
-
-const xpPerLesson = [100, 120, 150, 150, 200, 200, 250, 300];
-
-const moduleData: Record<string, { title: string; lessons: { id: number; title: string; status: "completed" | "current" | "locked" }[] }> = {
-  js: {
-    title: "JavaScript Fundamentals",
-    lessons: [
-      { id: 1, title: "Variables & Types", status: "completed" },
-      { id: 2, title: "Functions", status: "completed" },
-      { id: 3, title: "Arrays & Objects", status: "completed" },
-      { id: 4, title: "Loops & Conditions", status: "completed" },
-      { id: 5, title: "DOM Manipulation", status: "completed" },
-      { id: 6, title: "Events & Listeners", status: "completed" },
-      { id: 7, title: "Async / Await", status: "completed" },
-      { id: 8, title: "Error Handling", status: "completed" },
-    ],
-  },
-  git: {
-    title: "Git & Version Control",
-    lessons: [
-      { id: 1, title: "Init & Clone", status: "completed" },
-      { id: 2, title: "Staging & Commits", status: "completed" },
-      { id: 3, title: "Branches", status: "completed" },
-      { id: 4, title: "Merge & Rebase", status: "completed" },
-      { id: 5, title: "Pull Requests", status: "current" },
-      { id: 6, title: "Conflict Resolution", status: "locked" },
-    ],
-  },
-  api: {
-    title: "APIs & REST",
-    lessons: [
-      { id: 1, title: "What is an API?", status: "current" },
-      { id: 2, title: "HTTP Methods", status: "locked" },
-      { id: 3, title: "Status Codes", status: "locked" },
-      { id: 4, title: "Request Headers", status: "locked" },
-      { id: 5, title: "JSON Responses", status: "locked" },
-      { id: 6, title: "Authentication", status: "locked" },
-      { id: 7, title: "Rate Limiting", status: "locked" },
-    ],
-  },
-  backend: {
-    title: "Backend Basics",
-    lessons: [
-      { id: 1, title: "Server Setup", status: "current" },
-      { id: 2, title: "Routes", status: "locked" },
-      { id: 3, title: "Middleware", status: "locked" },
-      { id: 4, title: "Controllers", status: "locked" },
-      { id: 5, title: "Environment Vars", status: "locked" },
-      { id: 6, title: "Deployment", status: "locked" },
-    ],
-  },
-  db: {
-    title: "Database Essentials",
-    lessons: [
-      { id: 1, title: "SQL Basics", status: "current" },
-      { id: 2, title: "Tables & Schema", status: "locked" },
-      { id: 3, title: "CRUD Operations", status: "locked" },
-      { id: 4, title: "Joins", status: "locked" },
-      { id: 5, title: "Indexes", status: "locked" },
-    ],
-  },
-};
+import { modulesData } from "@/data/modules";
+import { phasesData } from "@/data/questions";
+import { getProgress } from "@/lib/progress";
 
 const REF_WIDTH = 390;
 const NODE_SIZE_CURRENT = 80;
@@ -88,9 +29,37 @@ const ModuleMap = () => {
   const navigate = useNavigate();
   const { moduleId } = useParams();
   const id = moduleId || "js";
-  const data = moduleData[id] || moduleData.js;
+  
   const theme = getModuleTheme(id);
+  // acha modulo pelo slug e pega as fases dele
+  const modulo = modulesData.find((m) => m.slug === id);
+  const fases = phasesData.filter((p) => p.moduleId === modulo?.id )
 
+  // pega progresso pra saber quais fases ja foram feitas
+  const progress = getProgress();
+  // monta no formato que o mapa precisa com status real
+  const data = {
+    title: modulo?.title || "Módulo",
+    lessons: fases.map((fase, index) => {
+      //verifica se essa fase ja foi completada
+      const completed = progress.completedPhases.includes(fase.phaseId);
+
+      // fase anterior precisa estar completa para desbloquear
+      const anteriorCompleta = index === 0 || progress.completedPhases.includes(fases[index - 1].phaseId);
+      
+      let status: "completed" | "current" | "locked" = "locked";
+      if(completed){
+        status = "completed";
+      } else if (anteriorCompleta){
+        status = "current";
+      }
+      return {
+        id: index + 1,
+        title: fase.title,
+        status,
+      };
+    }),
+  };
   const completedCount = data.lessons.filter(l => l.status === "completed").length;
   const positions = data.lessons.map((_, i) => getNodePosition(i, data.lessons.length));
   const totalHeight = positions.length > 0 ? positions[positions.length - 1].totalHeight : 400;
@@ -187,7 +156,7 @@ const ModuleMap = () => {
             const isCompleted = lesson.status === "completed";
             const isCurrent = lesson.status === "current";
             const isLocked = lesson.status === "locked";
-            const xp = xpPerLesson[i] || 100;
+            const xp = 100;
 
             const nodeSize = isCurrent ? NODE_SIZE_CURRENT : isCompleted ? NODE_SIZE_COMPLETED : NODE_SIZE_LOCKED;
 
