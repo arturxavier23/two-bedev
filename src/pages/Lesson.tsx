@@ -6,6 +6,9 @@ import { modulesData } from "@/data/modules";
 import { Button } from "@/components/ui/button";
 import { addXP, completePhase } from "@/lib/progress";
 
+
+// tela do quiz - mostra as perguntas da fase selecionada
+// calcula o xp ganho no final
 const Lesson = () => {
   const navigate = useNavigate();
   const { moduleId, lessonId } = useParams();
@@ -21,7 +24,7 @@ const Lesson = () => {
   const [finished, setFinished] = useState(false);
   const [xpGanho, setXpGanho] = useState(0);
 
-  // se nao achou a fase
+  // se a fase nao existe na url mostra erro e botao de voltar
   if (!fase) {
     return (
       <MobileShell>
@@ -41,7 +44,7 @@ const Lesson = () => {
   const question = fase.questions[currentIndex];
   const totalQuestions = fase.questions.length;
 
-  // quando clica numa opcao vai pra proxima pergunta
+  // funcao que roda quando clica numa opcao espera 800ms e vai pra proxima ou mostra o resultado 
   const handleAnswer = (index: number) => {
     if (selected !== null) return;
     setSelected(index);
@@ -49,13 +52,14 @@ const Lesson = () => {
     if (index === question.correctAnswer) {
       setScore((prev) => prev + 1);
     }
-
+    // delay pra dar tempo de ver se acertou ou errou
     setTimeout(() => {
       if (currentIndex + 1 < totalQuestions) {
         setCurrentIndex((prev) => prev + 1);
         setSelected(null);
       } else {
-        // acabou o quiz, salva xp e marca fase completa
+        // calcula quantas vezes acertou e quanto de xp ganhou
+        // 50 xp por acerto
         const acertou = index === question.correctAnswer;
         const finalScore = acertou ? score + 1 : score;
         const xp = finalScore * 50;
@@ -66,7 +70,7 @@ const Lesson = () => {
       }
     }, 800);
   };
-  // tela de resultado
+  // quando termina todas as perguntas mostra o resultado
   if (finished) {
     const porcentagem = Math.floor((score / totalQuestions) * 100);
     return (
