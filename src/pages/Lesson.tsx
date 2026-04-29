@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import MobileShell from "@/components/MobileShell";
 import { phasesData } from "@/data/questions";
 import { modulesData } from "@/data/modules";
+import { Button } from "@/components/ui/button";
+import { addXP, completePhase } from "@/lib/progress";
 
 const Lesson = () => {
   const navigate = useNavigate();
@@ -16,6 +18,8 @@ const Lesson = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
   const [score, setScore] = useState(0);
+  const [finished, setFinished] = useState(false);
+  const [xpGanho, setXpGanho] = useState(0);
 
   // se nao achou a fase
   if (!fase) {
@@ -50,10 +54,39 @@ const Lesson = () => {
       if (currentIndex + 1 < totalQuestions) {
         setCurrentIndex((prev) => prev + 1);
         setSelected(null);
+      } else {
+        // acabou o quiz, salva xp e marca fase completa
+        const acertou = index === question.correctAnswer;
+        const finalScore = acertou ? score + 1 : score;
+        const xp = finalScore * 50;
+        addXP(xp);
+        completePhase(fase.phaseId);
+        setXpGanho(xp);
+        setFinished(true);
       }
     }, 800);
   };
-
+  // tela de resultado
+  if (finished) {
+    const porcentagem = Math.floor((score / totalQuestions) * 100);
+    return (
+      <MobileShell>
+        <div className="flex min-h-screen flex-col items-center justify-center bg-slate-950 p-5">
+          <p className="text-4xl mb-4">🎉</p>
+          <h1 className="text-white text-2xl font-bold">Parabéns!</h1>
+          <p className="text-white text-lg mt-5">{score} / {totalQuestions} corretas</p>
+          <p className="text-purple-400 mt-2">{porcentagem}% de acerto</p>
+          <p className="text-green-400 text-xl font-bold mt-5">+{xpGanho} XP</p>
+          <Button
+            onClick={() => navigate(`/module/${moduleId}`)}
+            className="mt-10 bg-purple-600 hover:bg-purple-700 text-white px-10 py-3 rounded-full"
+          >
+            Continuar
+          </Button>
+        </div>
+      </MobileShell>
+    );
+  }
   return (
     <MobileShell>
       <div className="flex min-h-screen flex-col bg-slate-950 p-5 justify-center">
