@@ -54,7 +54,7 @@ export const completePhase = (phaseId: number): void => {
   saveProgress(progress);
 };
 
-// calcula o nivel do usuario (a cada 1000 xp sobe 1 nivel)
+// calcula o nivel do usuario (a cada 500 xp sobe 1 nivel)
 export const getLevel = (totalXP: number): number => {
-  return Math.floor(totalXP / 1000) + 1;
+  return Math.floor(totalXP / 500) + 1;
 };

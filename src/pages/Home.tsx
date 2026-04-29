@@ -13,8 +13,8 @@ const Home = () => {
   const progress = getProgress();
   const currentLevel = getLevel(progress.totalXP);
   const currentXp = progress.totalXP;
-  const xpDoNivel = currentXp % 1000; // xp dentro do nivel atual
-  const xpProgress = (xpDoNivel / 1000) * 100;
+  const xpDoNivel = currentXp % 500; // xp dentro do nivel atual
+  const xpProgress = (xpDoNivel / 500) * 100;
   const streak = 7 ; // TODO: implementar streak depois
 
   const missions = [
@@ -69,7 +69,7 @@ const Home = () => {
               <div className="flex items-center gap-1 text-primary">
                 <Zap className="h-3.5 w-3.5" />
                 <span className="text-sm font-bold">{currentXp.toLocaleString("pt-BR")}</span>
-                   <span className="text-[10px] text-muted-foreground">/ 1.000 XP</span>
+                   <span className="text-[10px] text-muted-foreground">/ 500 XP</span>
               </div>
             </div>
             <div className="h-2 rounded-full bg-surface-3 overflow-hidden">
