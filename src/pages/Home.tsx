@@ -4,15 +4,18 @@ import { Flame, Zap, Target, ChevronRight, Trophy, User, Sparkles } from "lucide
 import { Button } from "@/components/ui/button";
 import BottomNav from "@/components/BottomNav";
 import MobileShell from "@/components/MobileShell";
+import { getProgress, getLevel } from "@/lib/progress";
 
 const Home = () => {
   const navigate = useNavigate();
 
-  const currentLevel = 5;
-  const currentXp = 2450;
-  const nextLevelXp = 3000;
-  const xpProgress = (currentXp / nextLevelXp) * 100;
-  const streak = 7;
+  // pega os dados reais do progresso do usuario
+  const progress = getProgress();
+  const currentLevel = getLevel(progress.totalXP);
+  const currentXp = progress.totalXP;
+  const xpDoNivel = currentXp % 1000; // xp dentro do nivel atual
+  const xpProgress = (xpDoNivel / 1000) * 100;
+  const streak = 7 ; // TODO: implementar streak depois
 
   const missions = [
     { title: "Complete 1 lição", progress: 0, total: 1, xp: 20 },
@@ -27,7 +30,7 @@ const Home = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-between">
             <div>
               <p className="text-[11px] text-muted-foreground">Bem-vindo de volta,</p>
-              <h1 className="text-lg font-bold">Desenvolvedor 👋</h1>
+              <h1 className="text-lg font-bold">{progress.userName}</h1>
             </div>
             {/* Streak badge */}
             <motion.div
@@ -64,7 +67,7 @@ const Home = () => {
               <div className="flex items-center gap-1 text-primary">
                 <Zap className="h-3.5 w-3.5" />
                 <span className="text-sm font-bold">{currentXp.toLocaleString("pt-BR")}</span>
-                <span className="text-[10px] text-muted-foreground">/ {nextLevelXp.toLocaleString("pt-BR")} XP</span>
+                   <span className="text-[10px] text-muted-foreground">/ 1.000 XP</span>
               </div>
             </div>
             <div className="h-2 rounded-full bg-surface-3 overflow-hidden">
