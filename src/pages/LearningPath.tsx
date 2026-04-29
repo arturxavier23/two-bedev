@@ -6,21 +6,37 @@ import MobileShell from "@/components/MobileShell";
 import { getModuleTheme } from "@/lib/moduleThemes";
 import { modulesData } from "@/data/modules";
 import { phasesData } from "@/data/questions";
+import { getProgress } from "@/lib/progress";
 
-// monta a lista de modulos usando os dados reais em vez de dados fixos
-const modules = modulesData.map((mod) =>{
-  const fases = phasesData.filter((p) => p.moduleId === mod.id);
-  return {
-    id: mod.slug,
-    title: mod.title,
-    lessons: fases.length,
-    completed: 0, //por enquanto fixo, conecta o progresso depois
-    xp: fases.length * 100,
-  }
-})
 
 const LearningPath = () => {
   const navigate = useNavigate();
+  // pega o progresso do usuario
+const progress = getProgress();
+
+//monta a lista de modulos com progresso real
+const modules = modulesData.map((mod, index) => {
+  const fases = phasesData.filter((p) => p.moduleId === mod.id);
+  // consta quases fases desse modulo o usuario ja completou 
+  const completed = fases.filter((f) => progress.completedPhases.includes(f.phaseId)).length;
+
+  // modulo so desbloqueia se o anterior estiver completo
+  let locked = false;
+  if (index> 0){
+    const fasesAnterior = phasesData.filter((p) => p.moduleId === modulesData[index - 1].id);
+    const completouAnterior = fasesAnterior.filter((f) => progress.completedPhases.includes(f.phaseId)).length;
+    locked = completouAnterior < fasesAnterior.length;
+  }
+
+  return{
+    id: mod.slug,
+    title: mod.title,
+    lessons: fases.length,
+    completed,
+    xp: fases.length * 100,
+    status: locked ? "locked" : completed === fases.length ? "completed" : "active",
+  };
+  });
 
   return (
     <MobileShell>
