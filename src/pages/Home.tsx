@@ -61,7 +61,9 @@ const Home = () => {
                 </div>
                 <div>
                   <p className="text-xs font-semibold">Nível {currentLevel}</p>
-                  <p className="text-[10px] text-muted-foreground">Desenvolvedor Júnior</p>
+                   <p className="text-[10px] text-muted-foreground">
+                    {currentLevel <= 2 ? "Iniciante" : currentLevel <= 5 ? "Desenvolvedor Júnior" : "Desenvolvedor Pleno"}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-1 text-primary">
@@ -132,7 +134,7 @@ const Home = () => {
               </div>
               <div>
                 <p className="text-xs font-semibold">Perfil</p>
-                <p className="text-[10px] text-muted-foreground">3 conquistas</p>
+                <p className="text-[10px] text-muted-foreground">{progress.completedPhases.length} lições</p>
               </div>
             </motion.button>
           </div>
