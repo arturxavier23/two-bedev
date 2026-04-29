@@ -1,17 +1,23 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Lock, CheckCircle2, ChevronRight, Code2, GitBranch, Globe, Server, Database, Zap } from "lucide-react";
+import { ArrowLeft, Lock, CheckCircle2, ChevronRight, Zap } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import MobileShell from "@/components/MobileShell";
 import { getModuleTheme } from "@/lib/moduleThemes";
+import { modulesData } from "@/data/modules";
+import { phasesData } from "@/data/questions";
 
-const modules = [
-  { id: "js" as const, title: "JavaScript Fundamentals", icon: Code2, lessons: 8, completed: 8, xp: 800, status: "completed" as const },
-  { id: "git" as const, title: "Git & Version Control", icon: GitBranch, lessons: 6, completed: 4, xp: 600, status: "active" as const },
-  { id: "api" as const, title: "APIs & REST", icon: Globe, lessons: 7, completed: 0, xp: 700, status: "locked" as const },
-  { id: "backend" as const, title: "Backend Basics", icon: Server, lessons: 6, completed: 0, xp: 600, status: "locked" as const },
-  { id: "db" as const, title: "Database Essentials", icon: Database, lessons: 5, completed: 0, xp: 500, status: "locked" as const },
-];
+// monta a lista de modulos usando os dados reais em vez de dados fixos
+const modules = modulesData.map((mod) =>{
+  const fases = phasesData.filter((p) => p.moduleId === mod.id);
+  return {
+    id: mod.slug,
+    title: mod.title,
+    lessons: fases.length,
+    completed: 0, //por enquanto fixo, conecta o progresso depois
+    xp: fases.length * 100,
+  }
+})
 
 const LearningPath = () => {
   const navigate = useNavigate();
@@ -32,7 +38,7 @@ const LearningPath = () => {
             const isCompleted = mod.status === "completed";
             const progress = mod.lessons > 0 ? (mod.completed / mod.lessons) * 100 : 0;
             const theme = getModuleTheme(mod.id);
-            const earnedXp = Math.round((mod.completed / mod.lessons) * mod.xp);
+            const earnedXp = mod.completed * 100;
 
             return (
               <motion.button
@@ -61,7 +67,7 @@ const LearningPath = () => {
                   ) : isCompleted ? (
                     <CheckCircle2 className="h-4.5 w-4.5" style={{ color: theme.text }} />
                   ) : (
-                    <mod.icon className="h-4.5 w-4.5" style={{ color: theme.text }} />
+                    <Zap className="h-4.5 w-4.5" style={{ color: theme.text}}/>
                   )}
                 </div>
 
