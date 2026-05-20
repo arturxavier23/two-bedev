@@ -2,46 +2,83 @@ import { motion } from "framer-motion";
 import { Zap, Flame, BookOpen, Award, Settings } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import MobileShell from "@/components/MobileShell";
+import { getProgress, getLevel } from "@/lib/progress";
 
-const stats = [
-  { icon: Zap, label: "XP Total", value: "1.240", color: "text-primary" },
-  { icon: Flame, label: "Sequência", value: "7 dias", color: "text-accent" },
-  { icon: BookOpen, label: "Lições", value: "12", color: "text-neon-cyan" },
-  { icon: Award, label: "Conquistas", value: "4", color: "text-primary" },
-];
-
-const achievements = [
-  { title: "Primeira Lição", emoji: "🎯", unlocked: true },
-  { title: "7 Dias Seguidos", emoji: "🔥", unlocked: true },
-  { title: "Mestre do Módulo", emoji: "⭐", unlocked: true },
-  { title: "Velocista", emoji: "⚡", unlocked: true },
-  { title: "Poliglota", emoji: "🌍", unlocked: false },
-  { title: "Perfeccionista", emoji: "💎", unlocked: false },
-];
-
+// Tela de perfil do usuário
 const Profile = () => {
+  // Pega dados reais do usuário
+  const progress = getProgress();
+  const nivel = getLevel(progress.totalXP);
+
+  // Estatísticas com dados reais do localStorage
+  const stats = [
+    {
+      icon: Zap,
+      label: "XP Total",
+      value: progress.totalXP.toLocaleString("pt-BR"),
+      color: "text-primary",
+    },
+    {
+      icon: Flame,
+      label: "Sequência",
+      value: "7 dias",
+      color: "text-accent",
+    },
+    {
+      icon: BookOpen,
+      label: "Lições",
+      value: String(progress.completedPhases.length),
+      color: "text-neon-cyan",
+    },
+    {
+      icon: Award,
+      label: "Nível",
+      value: String(nivel),
+      color: "text-primary",
+    },
+  ];
+
+  // Conquistas fixas por enquanto
+  const achievements = [
+    { title: "Primeira Lição", emoji: "🎯", unlocked: true },
+    { title: "7 Dias Seguidos", emoji: "🔥", unlocked: true },
+    { title: "Mestre do Módulo", emoji: "⭐", unlocked: true },
+    { title: "Velocista", emoji: "⚡", unlocked: true },
+    { title: "Poliglota", emoji: "🌍", unlocked: false },
+    { title: "Perfeccionista", emoji: "💎", unlocked: false },
+  ];
+
   return (
     <MobileShell>
       <div className="flex min-h-screen flex-col pb-16">
         <div className="px-5 pt-10 pb-5 flex items-center justify-between">
           <h1 className="text-lg font-bold">Perfil</h1>
+
           <button className="text-muted-foreground hover:text-foreground">
             <Settings className="h-4 w-4" />
           </button>
         </div>
 
-        {/* Avatar & Name */}
+        {/* Nome e nível do usuário */}
         <div className="px-5 mb-5 flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 border border-primary/20 text-xl">
             ⚡
           </div>
+
           <div>
-            <p className="text-base font-bold">Desenvolvedor</p>
-            <p className="text-xs text-muted-foreground">Nível 5 • Iniciante</p>
+            <p className="text-base font-bold">{progress.userName}</p>
+            <p className="text-xs text-muted-foreground">
+              Nível {nivel} •{" "}
+              {nivel <= 2
+                ? "Iniciante"
+                : nivel <= 5
+                ? "Desenvolvedor Júnior"
+                : "Desenvolvedor Pleno"}
+            </p>
           </div>
         </div>
 
-        {/* Stats */}
+        {/* Cards de estatísticas */}
         <div className="px-5 mb-5 grid grid-cols-2 gap-2">
           {stats.map((stat, i) => (
             <motion.div
@@ -52,29 +89,40 @@ const Profile = () => {
               className="flex items-center gap-2.5 rounded-xl bg-surface-1 border border-border/60 p-3"
             >
               <stat.icon className={`h-3.5 w-3.5 ${stat.color}`} />
+
               <div>
                 <p className="text-sm font-bold">{stat.value}</p>
-                <p className="text-[9px] text-muted-foreground">{stat.label}</p>
+                <p className="text-[9px] text-muted-foreground">
+                  {stat.label}
+                </p>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* Achievements */}
+        {/* Conquistas */}
         <div className="px-5">
-          <h2 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2.5">Conquistas</h2>
+          <h2 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2.5">
+            Conquistas
+          </h2>
+
           <div className="grid grid-cols-3 gap-2">
-            {achievements.map((a, i) => (
+            {achievements.map((achievement, i) => (
               <motion.div
-                key={a.title}
+                key={achievement.title}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.04 }}
-                className={`flex flex-col items-center gap-1 rounded-xl border p-2.5
-                  ${a.unlocked ? "border-border/60 bg-surface-1" : "border-border/30 bg-surface-1/30 opacity-35"}`}
+                className={`flex flex-col items-center gap-1 rounded-xl border p-2.5 ${
+                  achievement.unlocked
+                    ? "border-border/60 bg-surface-1"
+                    : "border-border/30 bg-surface-1/30 opacity-35"
+                }`}
               >
-                <span className="text-lg">{a.emoji}</span>
-                <span className="text-[8px] font-medium text-center leading-tight text-muted-foreground">{a.title}</span>
+                <span className="text-lg">{achievement.emoji}</span>
+                <span className="text-[8px] font-medium text-center leading-tight text-muted-foreground">
+                  {achievement.title}
+                </span>
               </motion.div>
             ))}
           </div>
