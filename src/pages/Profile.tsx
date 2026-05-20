@@ -38,14 +38,38 @@ const Profile = () => {
     },
   ];
 
-  // Conquistas fixas por enquanto
+  // Conquistas desbloqueiam baseado no progresso real
   const achievements = [
-    { title: "Primeira Lição", emoji: "🎯", unlocked: true },
-    { title: "7 Dias Seguidos", emoji: "🔥", unlocked: true },
-    { title: "Mestre do Módulo", emoji: "⭐", unlocked: true },
-    { title: "Velocista", emoji: "⚡", unlocked: true },
-    { title: "Poliglota", emoji: "🌍", unlocked: false },
-    { title: "Perfeccionista", emoji: "💎", unlocked: false },
+    {
+      title: "Primeira Lição",
+      emoji: "🎯",
+      unlocked: progress.completedPhases.length >= 1,
+    },
+    {
+      title: "5 Lições",
+      emoji: "📚",
+      unlocked: progress.completedPhases.length >= 5,
+    },
+    {
+      title: "Nível 3",
+      emoji: "⭐",
+      unlocked: nivel >= 3,
+    },
+    {
+      title: "500 XP",
+      emoji: "⚡",
+      unlocked: progress.totalXP >= 500,
+    },
+    {
+      title: "Módulo Completo",
+      emoji: "🏆",
+      unlocked: progress.completedPhases.length >= 5,
+    },
+    {
+      title: "Mestre",
+      emoji: "💎",
+      unlocked: progress.completedPhases.length >= 20,
+    },
   ];
 
   return (
