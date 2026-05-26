@@ -12,13 +12,31 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // quando clica em criar conta
-  // salva o nome no localStorage e vai pro home
+  const [erro, setErro] = useState("");
+  // valida os campos antes de criar conta
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim()) {
-      updateUserName(name);
+
+    // verifica se os campos estao preenchidos
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      setErro("Preencha todos os campos");
+      return;
     }
+
+    // verifica formato basico do email
+    if (!email.includes("@") || !email.includes(".")) {
+      setErro("E-mail inválido");
+      return;
+    }
+
+    // senha precisa ter pelo menos 6 caracteres
+    if (password.length < 6) {
+      setErro("Senha precisa ter pelo menos 6 caracteres");
+      return;
+    }
+
+    setErro("");
+    updateUserName(name);
     navigate("/home");
   };
 
@@ -35,7 +53,7 @@ const Register = () => {
             <p className="text-xs text-muted-foreground">Comece sua jornada de aprendizado</p>
           </div>
 
-          <form onSubmit={handleRegister} className="flex flex-col gap-3.5">
+          <form onSubmit={handleRegister} noValidate className="flex flex-col gap-3.5">
             <div className="space-y-1.5">
               <label className="text-xs text-muted-foreground font-medium">Nome</label>
               <Input
@@ -66,7 +84,10 @@ const Register = () => {
                 className="h-11 bg-surface-1 border-border/60 text-sm"
               />
             </div>
-
+            {/* mensagem de erro */}
+            {erro && (
+              <p className="text-red-500 text-xs text-center">{erro}</p>
+            )}
             <Button className="h-11 mt-1 text-sm font-semibold btn-gradient text-primary-foreground border-0">
               Criar Conta
             </Button>
