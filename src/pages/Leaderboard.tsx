@@ -2,19 +2,29 @@ import { motion } from "framer-motion";
 import { Zap, Trophy } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import MobileShell from "@/components/MobileShell";
+import { getProgress } from "@/lib/progress";
 
-const users = [
-  { name: "CyberNova", xp: 3420, avatar: "🧑‍💻" },
-  { name: "DevMaster", xp: 2890, avatar: "👩‍💻" },
-  { name: "CodePhoenix", xp: 2310, avatar: "🦊" },
-  { name: "ByteRunner", xp: 1980, avatar: "🚀" },
-  { name: "Você", xp: 1240, avatar: "⚡", isUser: true },
-  { name: "PixelDev", xp: 1100, avatar: "🎮" },
-  { name: "StackOwl", xp: 890, avatar: "🦉" },
-  { name: "NullPointer", xp: 650, avatar: "💀" },
-];
-
+// tela de ranking
+// dados dos outros usuarios sao fixos por enquanto
+// quando tiver supabase vai puxar do banco
 const Leaderboard = () => {
+  // pega o xp real do usuario
+  const progress = getProgress();
+
+  // lista de usuarios com o xp real do usuario logado
+  const users = [
+    { name: "CyberNova", xp: 3420, avatar: "🧑‍💻" },
+    { name: "DevMaster", xp: 2890, avatar: "👩‍💻" },
+    { name: "CodePhoenix", xp: 2310, avatar: "🦊" },
+    { name: "ByteRunner", xp: 1980, avatar: "🚀" },
+    { name: progress.userName, xp: progress.totalXP, avatar: "⚡", isUser: true },
+    { name: "PixelDev", xp: 1100, avatar: "🎮" },
+    { name: "StackOwl", xp: 890, avatar: "🦉" },
+    { name: "NullPointer", xp: 650, avatar: "💀" },
+  ]
+    // ordena por xp do maior pro menor
+    .sort((a, b) => b.xp - a.xp);
+
   return (
     <MobileShell>
       <div className="flex min-h-screen flex-col pb-16">
