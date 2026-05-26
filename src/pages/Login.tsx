@@ -74,7 +74,7 @@ const Login = () => {
 
           <p className="text-center text-xs text-muted-foreground mt-2">
             Não tem uma conta?{" "}
-            <button className="text-primary hover:underline font-medium" onClick={() => navigate("/login")}>Criar conta</button>
+            <button className="text-primary hover:underline font-medium" onClick={() => navigate("/register")}>Criar conta</button>
           </p>
         </motion.div>
       </div>
