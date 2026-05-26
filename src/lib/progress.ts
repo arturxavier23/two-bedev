@@ -83,3 +83,32 @@ export const syncToSupabase = async (): Promise<void> => {
     console.log("erro ao sincronizar:", error.message);
   }
 };
+// carrega progresso do supabase quando o usuario loga
+// se tiver dados no banco, atualiza o localStorage
+export const loadFromSupabase = async (): Promise<void> => {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const { data, error } = await supabase
+    .from("progress")
+    .select("*")
+    .eq("user_id", user.id)
+    .single();
+
+  if (error || !data) return;
+
+  // pega o progresso local
+  const local = getProgress();
+
+  // usa o maior xp entre local e banco
+  // e junta as fases completadas dos dois
+  const merged: Progress = {
+    userName: local.userName,
+    totalXP: Math.max(local.totalXP, data.total_xp || 0),
+    completedPhases: [
+      ...new Set([...local.completedPhases, ...(data.completed_phases || [])])
+    ],
+  };
+
+  saveProgress(merged);
+};
