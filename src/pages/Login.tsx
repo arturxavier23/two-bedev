@@ -10,9 +10,25 @@ const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [erro, setErro] = useState("");
 
+  // valida os campos antes de entrar
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // verifica se os campos estao preenchidos
+    if (!email.trim() || !password.trim()) {
+      setErro("Preencha todos os campos");
+      return;
+    }
+
+    // verifica formato basico do email
+    if (!email.includes("@") || !email.includes(".")) {
+      setErro("E-mail inválido");
+      return;
+    }
+
+    setErro("");
     navigate("/home");
   };
 
@@ -36,7 +52,7 @@ const Login = () => {
             <p className="text-xs text-muted-foreground">Continue sua jornada de aprendizado</p>
           </div>
 
-          <form onSubmit={handleLogin} className="flex flex-col gap-3.5">
+          <form onSubmit={handleLogin} noValidate className="flex flex-col gap-3.5">
             <div className="space-y-1.5">
               <label className="text-xs text-muted-foreground font-medium">E-mail</label>
               <Input
@@ -57,7 +73,10 @@ const Login = () => {
                 className="h-11 bg-surface-1 border-border/60 text-sm focus:border-primary/50 focus:ring-1 focus:ring-primary/20"
               />
             </div>
-
+            {/* mensagem de erro */}
+            {erro && (
+              <p className="text-red-500 text-xs text-center">{erro}</p>
+            )}
             <Button type="submit" className="h-11 mt-1 text-sm font-semibold btn-gradient text-primary-foreground border-0 glow-purple">
               Continuar
             </Button>
