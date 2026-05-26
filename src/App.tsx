@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Opening from "./pages/Opening";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Home from "./pages/Home";
 import LearningPath from "./pages/LearningPath";
 import ModuleMap from "./pages/ModuleMap";
@@ -20,6 +21,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Opening />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
           <Route path="/learning-path" element={<LearningPath />} />
           <Route path="/module/:moduleId" element={<ModuleMap />} />
