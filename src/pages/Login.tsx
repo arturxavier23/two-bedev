@@ -5,6 +5,7 @@ import { Terminal, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MobileShell from "@/components/MobileShell";
+import { supabase } from "@/lib/supabase";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,19 +13,28 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [erro, setErro] = useState("");
 
-  // valida os campos antes de entrar
-  const handleLogin = (e: React.FormEvent) => {
+// valida os campos e faz login no supabase
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // verifica se os campos estao preenchidos
     if (!email.trim() || !password.trim()) {
       setErro("Preencha todos os campos");
       return;
     }
 
-    // verifica formato basico do email
     if (!email.includes("@") || !email.includes(".")) {
       setErro("E-mail inválido");
+      return;
+    }
+
+    // tenta fazer login no supabase
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setErro("E-mail ou senha incorretos");
       return;
     }
 
