@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MobileShell from "@/components/MobileShell";
+import { updateUserName } from "@/lib/progress";
 
 // tela de cadastro
 const Register = () => {
@@ -11,6 +12,15 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // quando clica em criar conta
+  // salva o nome no localStorage e vai pro home
+  const handleRegister = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (name.trim()) {
+      updateUserName(name);
+    }
+    navigate("/home");
+  };
 
   return (
     <MobileShell>
@@ -25,7 +35,7 @@ const Register = () => {
             <p className="text-xs text-muted-foreground">Comece sua jornada de aprendizado</p>
           </div>
 
-          <div className="flex flex-col gap-3.5">
+          <form onSubmit={handleRegister} className="flex flex-col gap-3.5">
             <div className="space-y-1.5">
               <label className="text-xs text-muted-foreground font-medium">Nome</label>
               <Input
@@ -60,7 +70,7 @@ const Register = () => {
             <Button className="h-11 mt-1 text-sm font-semibold btn-gradient text-primary-foreground border-0">
               Criar Conta
             </Button>
-          </div>
+          </form>
         </div>
       </div>
     </MobileShell>
