@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MobileShell from "@/components/MobileShell";
 import { updateUserName } from "@/lib/progress";
+import { supabase } from "@/lib/supabase";
 
 // tela de cadastro
 const Register = () => {
@@ -13,25 +14,33 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [erro, setErro] = useState("");
-  // valida os campos antes de criar conta
-  const handleRegister = (e: React.FormEvent) => {
+ / valida os campos e cria conta no supabase
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // verifica se os campos estao preenchidos
     if (!name.trim() || !email.trim() || !password.trim()) {
       setErro("Preencha todos os campos");
       return;
     }
 
-    // verifica formato basico do email
     if (!email.includes("@") || !email.includes(".")) {
       setErro("E-mail inválido");
       return;
     }
 
-    // senha precisa ter pelo menos 6 caracteres
     if (password.length < 6) {
       setErro("Senha precisa ter pelo menos 6 caracteres");
+      return;
+    }
+
+    // cria conta no supabase
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      setErro("Erro ao criar conta: " + error.message);
       return;
     }
 
@@ -39,7 +48,6 @@ const Register = () => {
     updateUserName(name);
     navigate("/home");
   };
-
   return (
     <MobileShell>
       <div className="flex min-h-screen flex-col px-6 pt-10 pb-8">
