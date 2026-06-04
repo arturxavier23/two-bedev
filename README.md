@@ -155,7 +155,8 @@ two-bedev/
 | João Pedro Faccio | Scrum Master / Dev Frontend | @JoaoFaccio087 |
 | Artur Xavier | Dev Backend | [@arturxavier23](https://github.com/arturxavier23) |
 | João Paulo Kaezer | UX/UI Designer | @jpkaizer |
-| Thiago Caleb | QA / Tester | @thiagocaleb-br|
+| Thiago Caleb | QA / Tester | [thiagocaleb-br
+](https://github.com/thiagocaleb-br)|
 
 ---
 
