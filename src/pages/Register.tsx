@@ -14,7 +14,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [erro, setErro] = useState("");
- / valida os campos e cria conta no supabase
+ // valida os campos e cria conta no supabase
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
