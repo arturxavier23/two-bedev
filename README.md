@@ -147,7 +147,7 @@ two-bedev/
 
 ---
 
-## 👥 Equipe
+[## 👥 Equipe
 
 | Nome | Função | GitHub |
 |------|--------|--------|
@@ -156,7 +156,7 @@ two-bedev/
 | Artur Xavier | Dev Backend | [@arturxavier23](https://github.com/arturxavier23) |
 | João Paulo Kaezer | UX/UI Designer | @jpkaizer |
 | Thiago Caleb | QA / Tester | [@thiagocaleb-br
-](https://github.com/thiagocaleb-br) |
+](https://github.com/thiagocaleb-br) |](https://github.com/jpkaizer)
 
 ---
 
