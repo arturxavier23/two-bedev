@@ -147,16 +147,15 @@ two-bedev/
 
 ---
 
-[## 👥 Equipe
+## 👥 Equipe
 
 | Nome | Função | GitHub |
 |------|--------|--------|
 | Nicolly Mendes Cescon | Scrum Master / Dev Backend | [@nicollymendes](https://github.com/nicollymendes) |
-| João Pedro Faccio | Scrum Master / Dev Frontend | @JoaoFaccio087 |
+| João Pedro Faccio | Scrum Master / Dev Frontend | [@JoaoFaccio087](https://github.com/JoaoFaccio087) |
 | Artur Xavier | Dev Backend | [@arturxavier23](https://github.com/arturxavier23) |
-| João Paulo Kaezer | UX/UI Designer | @jpkaizer |
-| Thiago Caleb | QA / Tester | [@thiagocaleb-br
-](https://github.com/thiagocaleb-br) |](https://github.com/jpkaizer)
+| João Paulo Kaezer | UX/UI Designer | [@jpkaizer](https://github.com/jpkaizer) |
+| Thiago Caleb | QA / Tester | [@thiagocaleb-br](https://github.com/thiagocaleb-br) |
 
 ---
 
