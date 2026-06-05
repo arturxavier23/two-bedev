@@ -2,6 +2,7 @@
 // salva tudo no localStorage do navegador por enquanto
 // depois vamos migrar pro supabase
 import { supabase } from "@/lib/supabase";
+// supabase pode ser null se nao tiver as variaveis de ambiente
 const KEY = "two_be_dev_progress";
 
 export type Progress = {
@@ -63,7 +64,7 @@ export const getLevel = (totalXP: number): number => {
 // sincroniza o progresso local com o supabase
 // salva no banco pra nao perder se trocar de navegador
 export const syncToSupabase = async (): Promise<void> => {
-  // verifica se o usuario ta logado
+  if (!supabase) return; // sem supabase configurado, nao sincroniza
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return; // se nao ta logado nao sincroniza
 
@@ -86,6 +87,7 @@ export const syncToSupabase = async (): Promise<void> => {
 // carrega progresso do supabase quando o usuario loga
 // se tiver dados no banco, atualiza o localStorage
 export const loadFromSupabase = async (): Promise<void> => {
+  if (!supabase) return;
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;
 
