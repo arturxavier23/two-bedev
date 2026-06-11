@@ -1,14 +1,32 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Zap, Flame, BookOpen, Award, Settings } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import MobileShell from "@/components/MobileShell";
-import { getProgress, getLevel } from "@/lib/progress";
-
+import { getProgress, getLevel, updateUserName } from "@/lib/progress";
+import { supabase } from "@/lib/supabase";
 // Tela de perfil do usuário
 const Profile = () => {
   // Pega dados reais do usuário
   const progress = getProgress();
   const nivel = getLevel(progress.totalXP);
+  // controla se ta editando o nome ou nao
+  const [editando, setEditando] = useState(false);
+  const [novoNome, setNovoNome] = useState(progress.userName);
+
+  // salva o nome no localStorage e no supabase
+  const handleSalvar = async () => {
+    if (!novoNome.trim()) return;
+    updateUserName(novoNome);
+    if (supabase) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from("users").update({ name: novoNome }).eq("id", user.id);
+      }
+    }
+    setEditando(false);
+  };
+  
 
   // Estatísticas com dados reais do localStorage
   const stats = [
@@ -78,7 +96,7 @@ const Profile = () => {
         <div className="px-5 pt-10 pb-5 flex items-center justify-between">
           <h1 className="text-lg font-bold">Perfil</h1>
 
-          <button className="text-muted-foreground hover:text-foreground">
+          <button onClick={() => setEditando(!editando)} className="text-muted-foreground hover:text-foreground">
             <Settings className="h-4 w-4" />
           </button>
         </div>
@@ -89,8 +107,24 @@ const Profile = () => {
             ⚡
           </div>
 
-          <div>
-            <p className="text-base font-bold">{progress.userName}</p>
+          <div className="flex-1">
+            {editando ? (
+              <div className="flex gap-2">
+                <input
+                  value={novoNome}
+                  onChange={(e) => setNovoNome(e.target.value)}
+                  className="bg-surface-1 border border-border/60 rounded-lg px-2 py-1 text-sm text-white"
+                />
+                <button onClick={handleSalvar} className="text-xs text-primary font-medium">
+                  Salvar
+                </button>
+                <button onClick={() => setEditando(false)} className="text-xs text-muted-foreground">
+                  Cancelar
+                </button>
+              </div>
+            ) : (
+              <p className="text-base font-bold">{progress.userName}</p>
+            )}
             <p className="text-xs text-muted-foreground">
               Nível {nivel} •{" "}
               {nivel <= 2
