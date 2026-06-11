@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import BottomNav from "@/components/BottomNav";
 import MobileShell from "@/components/MobileShell";
 import { getProgress, getLevel } from "@/lib/progress";
+import { getRecommendation } from "@/lib/recommendations";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -15,7 +16,9 @@ const Home = () => {
   const currentXp = progress.totalXP;
   const xpDoNivel = currentXp % 500; // xp dentro do nivel atual
   const xpProgress = (xpDoNivel / 500) * 100;
-  const streak = 7 ; // TODO: implementar streak depois
+  const streak = 7 ;
+  // pega exercicio recomendado baseado no progresso
+  const recomendacao = getRecommendation();
 
   // missoes diarias baseadas no progresso real
   const missions = [
@@ -140,8 +143,22 @@ const Home = () => {
             </motion.button>
           </div>
         </div>
-
-        {/* Daily Missions */}
+        {/* recomendacao personalizada */}
+        <div className="px-5 mb-4">
+          <h2 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2.5">Recomendado pra você</h2>
+          <button
+            onClick={() => navigate(recomendacao.link)}
+            className="w-full flex items-center gap-3 rounded-xl bg-primary/10 border border-primary/20 p-3 text-left hover:bg-primary/15 transition-colors"
+          >
+            <span className="text-lg">🎯</span>
+            <div className="flex-1">
+              <p className="text-sm font-medium text-white">{recomendacao.title}</p>
+              <p className="text-xs text-muted-foreground">{recomendacao.description}</p>
+            </div>
+            <ChevronRight className="h-4 w-4 text-primary" />
+          </button>
+        </div>
+        {/* missoes diarias */}
         <div className="px-5">
           <h2 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2.5">Missões Diárias</h2>
           <div className="space-y-2">
