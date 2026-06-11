@@ -95,6 +95,13 @@ const Login = () => {
             <Button type="submit" className="h-11 mt-1 text-sm font-semibold btn-gradient text-primary-foreground border-0 glow-purple">
               Continuar
             </Button>
+            <button
+              type="button"
+              onClick={() => navigate("/forgot-password")}
+              className="text-xs text-muted-foreground hover:text-primary text-center"
+            >
+              Esqueceu sua senha?
+            </button>
           </form>
 
           <p className="text-center text-xs text-muted-foreground mt-2">
