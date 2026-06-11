@@ -35,14 +35,16 @@ const Register = () => {
     }
 
     // cria conta no supabase
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    if (supabase) {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
 
-    if (error) {
-      setErro("Erro ao criar conta: " + error.message);
-      return;
+      if (error) {
+        setErro("Erro ao criar conta: " + error.message);
+        return;
+      }
     }
 
     setErro("");

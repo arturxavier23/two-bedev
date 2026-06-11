@@ -29,14 +29,16 @@ const Login = () => {
     }
 
     // tenta fazer login no supabase
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    if (supabase) {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
-      setErro("E-mail ou senha incorretos");
-      return;
+      if (error) {
+        setErro("E-mail ou senha incorretos");
+        return;
+      }
     }
 
     setErro("");
