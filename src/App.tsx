@@ -5,6 +5,7 @@ import Opening from "./pages/Opening";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
+import Exercises from "./pages/Exercises";
 import Home from "./pages/Home";
 import LearningPath from "./pages/LearningPath";
 import ModuleMap from "./pages/ModuleMap";
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/exercises" element={<Exercises />} />
           <Route path="/home" element={<Home />} />
           <Route path="/learning-path" element={<LearningPath />} />
           <Route path="/module/:moduleId" element={<ModuleMap />} />
