@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Zap, Flame, BookOpen, Award, Settings } from "lucide-react";
+import { Zap, Flame, BookOpen, Award, Settings, Share2 } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import MobileShell from "@/components/MobileShell";
 import { getProgress, getLevel, updateUserName } from "@/lib/progress";
@@ -13,6 +13,7 @@ const Profile = () => {
   // controla se ta editando o nome ou nao
   const [editando, setEditando] = useState(false);
   const [novoNome, setNovoNome] = useState(progress.userName);
+  
 
   // salva o nome no localStorage e no supabase
   const handleSalvar = async () => {
@@ -26,7 +27,11 @@ const Profile = () => {
     }
     setEditando(false);
   };
-  
+  // compartilha o progresso do usuario
+  const handleCompartilhar = () => {
+    const texto = `🎮 Estou no nível ${nivel} no Two-BeDev! Já completei ${progress.completedPhases.length} lições e tenho ${progress.totalXP} XP. Bora aprender inglês técnico? 🚀`;
+    window.prompt("Copie e compartilhe seu progresso:", texto);
+  };
 
   // Estatísticas com dados reais do localStorage
   const stats = [
@@ -157,7 +162,16 @@ const Profile = () => {
             </motion.div>
           ))}
         </div>
-
+          {/* botao de compartilhar */}
+        <div className="px-5 mb-5">
+          <button
+            onClick={handleCompartilhar}
+            className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary/10 border border-primary/20 p-3 text-sm font-medium text-primary hover:bg-primary/20 transition-colors"
+          >
+            <Share2 className="h-4 w-4" />
+            Compartilhar Progresso
+          </button>
+        </div>
         {/* Conquistas */}
         <div className="px-5">
           <h2 className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2.5">
