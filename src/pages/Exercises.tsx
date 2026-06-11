@@ -34,7 +34,7 @@ const Exercises = () => {
         </div>
 
         {/* botoes de filtro */}
-        <div className="px-5 mb-4 flex gap-2 overflow-x-auto">
+        <div className="px-5 mb-4 flex gap-2 overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: "none" }}>
           <button
             onClick={() => setFiltro(null)}
             className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap ${
