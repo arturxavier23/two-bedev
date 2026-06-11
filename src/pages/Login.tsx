@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MobileShell from "@/components/MobileShell";
 import { supabase } from "@/lib/supabase";
+import { loadFromSupabase } from "@/lib/progress";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -39,6 +40,8 @@ const Login = () => {
     }
 
     setErro("");
+    // carrega o progresso do banco antes de ir pro home
+    await loadFromSupabase();
     navigate("/home");
   };
 

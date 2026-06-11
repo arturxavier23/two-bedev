@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import MobileShell from "@/components/MobileShell";
 import { updateUserName } from "@/lib/progress";
 import { supabase } from "@/lib/supabase";
+import { loadFromSupabase } from "@/lib/progress";
 
 // tela de cadastro
 const Register = () => {
@@ -46,6 +47,8 @@ const Register = () => {
 
     setErro("");
     updateUserName(name);
+    // sincroniza com o banco
+    await loadFromSupabase();
     navigate("/home");
   };
   return (
