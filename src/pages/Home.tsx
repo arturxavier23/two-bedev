@@ -17,10 +17,11 @@ const Home = () => {
   const xpProgress = (xpDoNivel / 500) * 100;
   const streak = 7 ; // TODO: implementar streak depois
 
+  // missoes diarias baseadas no progresso real
   const missions = [
-    { title: "Complete 1 lição", progress: 0, total: 1, xp: 20 },
-    { title: "Acerte 3 respostas seguidas", progress: 1, total: 3, xp: 30 },
-    { title: "Ganhe 100 XP hoje", progress: 45, total: 100, xp: 50 },
+    { title: "Complete 1 lição", progress: Math.min(progress.completedPhases.length, 1), total: 1, xp: 20 },
+    { title: "Complete 3 lições", progress: Math.min(progress.completedPhases.length, 3), total: 3, xp: 30 },
+    { title: "Ganhe 100 XP", progress: Math.min(progress.totalXP, 100), total: 100, xp: 50 },
   ];
 
   return (
