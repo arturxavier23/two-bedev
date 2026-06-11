@@ -34,9 +34,9 @@ const Register = () => {
       return;
     }
 
-    // cria conta no supabase
     if (supabase) {
-      const { error } = await supabase.auth.signUp({
+      // cria conta no auth do supabase
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
@@ -44,6 +44,22 @@ const Register = () => {
       if (error) {
         setErro("Erro ao criar conta: " + error.message);
         return;
+      }
+
+      // salva o nome e email na tabela users
+      if (data.user) {
+        await supabase.from("users").insert({
+          id: data.user.id,
+          name: name,
+          email: email,
+        });
+
+        // cria registro de progresso zerado
+        await supabase.from("progress").insert({
+          user_id: data.user.id,
+          total_xp: 0,
+          completed_phases: [],
+        });
       }
     }
 
