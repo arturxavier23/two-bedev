@@ -16,12 +16,22 @@ export type HistoryEntry = {
   data: string; // data que fez o exercicio
 };
 
+// tipo de um erro salvo pra revisao
+export type WrongAnswer = {
+  phaseId: number;
+  question: string;
+  userAnswer: string;    // o que o usuario respondeu
+  correctAnswer: string; // resposta certa
+  category: string;      // nome do modulo
+};
+
 export type Progress = {
   userName: string;
   totalXP: number;
   completedPhases: number[];
   favoritePhases: number[];
-  history: HistoryEntry[]; // historico dos exercicios feitos
+  history: HistoryEntry[];
+  wrongAnswers: WrongAnswer[]; // exercicios que errou
 };
 
 // valores iniciais quando o usuario abre o app pela primeira vez
@@ -31,6 +41,7 @@ const defaultProgress: Progress = {
   completedPhases: [],
   favoritePhases: [],
   history: [],
+  wrongAnswers: [],
 };
 
 // pega o progresso salvo no navegador
@@ -92,6 +103,25 @@ export const addToHistory = (entry: HistoryEntry): void => {
   }
   saveProgress(progress);
 };
+
+// salva uma resposta errada pra revisao depois
+export const addWrongAnswer = (wrong: WrongAnswer): void => {
+  const progress = getProgress();
+  // nao duplica a mesma pergunta
+  const jaExiste = progress.wrongAnswers.some((w) => w.question === wrong.question);
+  if (!jaExiste) {
+    progress.wrongAnswers.push(wrong);
+  }
+  saveProgress(progress);
+};
+
+// remove uma resposta errada (quando o usuario acerta na revisao)
+export const removeWrongAnswer = (question: string): void => {
+  const progress = getProgress();
+  progress.wrongAnswers = progress.wrongAnswers.filter((w) => w.question !== question);
+  saveProgress(progress);
+};
+
 // calcula o nivel do usuario (a cada 500 xp sobe 1 nivel)
 export const getLevel = (totalXP: number): number => {
   return Math.floor(totalXP / 500) + 1;
@@ -147,6 +177,7 @@ export const loadFromSupabase = async (): Promise<void> => {
     ],
     favoritePhases: local.favoritePhases || [],
     history: local.history || [],
+     wrongAnswers: local.wrongAnswers || [],
   };
 
   saveProgress(merged);
