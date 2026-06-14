@@ -4,8 +4,7 @@ import MobileShell from "@/components/MobileShell";
 import { phasesData } from "@/data/questions";
 import { modulesData } from "@/data/modules";
 import { Button } from "@/components/ui/button";
-import { addXP, completePhase, addToHistory } from "@/lib/progress";
-
+import { addXP, completePhase, addToHistory, addWrongAnswer } from "@/lib/progress";
 
 // tela do quiz - mostra as perguntas da fase selecionada
 // calcula o xp ganho no final
@@ -49,9 +48,20 @@ const Lesson = () => {
     if (selected !== null) return;
     setSelected(index);
 
-    if (index === question.correctAnswer) {
+  if (index === question.correctAnswer) {
       setScore((prev) => prev + 1);
+    } else {
+      // salva a pergunta errada pra revisao
+      const mod = modulesData.find((m) => m.id === fase?.moduleId);
+      addWrongAnswer({
+        phaseId: fase?.phaseId || 0,
+        question: question.question,
+        userAnswer: question.options[index],
+        correctAnswer: question.options[question.correctAnswer],
+        category: mod?.title || "",
+      });
     }
+
     // delay pra dar tempo de ver se acertou ou errou
     setTimeout(() => {
       if (currentIndex + 1 < totalQuestions) {
