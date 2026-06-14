@@ -4,7 +4,7 @@ import MobileShell from "@/components/MobileShell";
 import { phasesData } from "@/data/questions";
 import { modulesData } from "@/data/modules";
 import { Button } from "@/components/ui/button";
-import { addXP, completePhase } from "@/lib/progress";
+import { addXP, completePhase, addToHistory } from "@/lib/progress";
 
 
 // tela do quiz - mostra as perguntas da fase selecionada
@@ -65,6 +65,17 @@ const Lesson = () => {
         const xp = finalScore * 50;
         addXP(xp);
         completePhase(fase.phaseId);
+        // salva no historico
+        const mod = modulesData.find((m) => m.id === fase?.moduleId);
+        addToHistory({
+          phaseId: fase?.phaseId || 0,
+          phaseTitle: fase?.title || "",
+          moduleName: mod?.title || "",
+          score: finalScore,
+          total: totalQuestions,
+          xpGanho: xp,
+          data: new Date().toLocaleDateString("pt-BR"),
+        });
         setXpGanho(xp);
         setFinished(true);
       }
