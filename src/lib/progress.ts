@@ -5,10 +5,23 @@ import { supabase } from "@/lib/supabase";
 // supabase pode ser null se nao tiver as variaveis de ambiente
 const KEY = "two_be_dev_progress";
 
+// tipo de um registro no historico
+export type HistoryEntry = {
+  phaseId: number;
+  phaseTitle: string;
+  moduleName: string;
+  score: number;
+  total: number;
+  xpGanho: number;
+  data: string; // data que fez o exercicio
+};
+
 export type Progress = {
   userName: string;
   totalXP: number;
   completedPhases: number[];
+  favoritePhases: number[];
+  history: HistoryEntry[]; // historico dos exercicios feitos
 };
 
 // valores iniciais quando o usuario abre o app pela primeira vez
@@ -16,6 +29,8 @@ const defaultProgress: Progress = {
   userName: "Aluno",
   totalXP: 0,
   completedPhases: [],
+  favoritePhases: [],
+  history: [],
 };
 
 // pega o progresso salvo no navegador
@@ -56,7 +71,27 @@ export const completePhase = (phaseId: number): void => {
   // sincroniza com supabase em background
   syncToSupabase();
 };
+// adiciona ou remove uma fase dos favoritos
+export const toggleFavorite = (phaseId: number): void => {
+  const progress = getProgress();
+  if (progress.favoritePhases.includes(phaseId)) {
+    progress.favoritePhases = progress.favoritePhases.filter((id) => id !== phaseId);
+  } else {
+    progress.favoritePhases.push(phaseId);
+  }
+  saveProgress(progress);
+};
 
+// salva um exercicio no historico
+// guarda no maximo os ultimos 30
+export const addToHistory = (entry: HistoryEntry): void => {
+  const progress = getProgress();
+  progress.history.unshift(entry);
+  if (progress.history.length > 30) {
+    progress.history = progress.history.slice(0, 30);
+  }
+  saveProgress(progress);
+};
 // calcula o nivel do usuario (a cada 500 xp sobe 1 nivel)
 export const getLevel = (totalXP: number): number => {
   return Math.floor(totalXP / 500) + 1;
@@ -110,6 +145,8 @@ export const loadFromSupabase = async (): Promise<void> => {
     completedPhases: [
       ...new Set([...local.completedPhases, ...(data.completed_phases || [])])
     ],
+    favoritePhases: local.favoritePhases || [],
+    history: local.history || [],
   };
 
   saveProgress(merged);
