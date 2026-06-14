@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import Exercises from "./pages/Exercises";
 import History from "./pages/History";
+import Glossary from "./pages/Glossary";
 import Home from "./pages/Home";
 import LearningPath from "./pages/LearningPath";
 import ModuleMap from "./pages/ModuleMap";
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/exercises" element={<Exercises />} />
           <Route path="/history" element={<History />} />
+          <Route path="/glossary" element={<Glossary />} />
           <Route path="/home" element={<Home />} />
           <Route path="/learning-path" element={<LearningPath />} />
           <Route path="/module/:moduleId" element={<ModuleMap />} />
