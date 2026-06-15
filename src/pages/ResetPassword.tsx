@@ -13,6 +13,22 @@ const ResetPassword = () => {
   const [confirmar, setConfirmar] = useState("");
   const [erro, setErro] = useState("");
   const [sucesso, setSucesso] = useState(false);
+  const [carregando, setCarregando] = useState(true);
+
+  // espera o supabase processar o token da URL
+  useEffect(() => {
+    if (supabase) {
+      supabase.auth.onAuthStateChange((event) => {
+        if (event === "PASSWORD_RECOVERY") {
+          setCarregando(false);
+        }
+      });
+      // timeout pra nao ficar carregando pra sempre
+      setTimeout(() => setCarregando(false), 3000);
+    } else {
+      setCarregando(false);
+    }
+  }, []);
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,7 +90,9 @@ const ResetPassword = () => {
               Digite sua nova senha abaixo
             </p>
           </div>
-
+        {carregando ? (
+            <p className="text-sm text-muted-foreground text-center py-10">Verificando link...</p>
+          ) : (
           <form onSubmit={handleReset} noValidate className="flex flex-col gap-3.5">
             <div className="space-y-1.5">
               <label className="text-xs text-muted-foreground font-medium">Nova senha</label>
@@ -103,6 +121,7 @@ const ResetPassword = () => {
               Atualizar Senha
             </Button>
           </form>
+          )}
         </div>
       </div>
     </MobileShell>
