@@ -15,19 +15,36 @@ const ResetPassword = () => {
   const [sucesso, setSucesso] = useState(false);
   const [carregando, setCarregando] = useState(true);
 
-  // espera o supabase processar o token da URL
+  // processa o token da URL quando a pagina carrega
   useEffect(() => {
-    if (supabase) {
-      supabase.auth.onAuthStateChange((event) => {
-        if (event === "PASSWORD_RECOVERY") {
+    const processToken = async () => {
+      if (!supabase) {
+        setCarregando(false);
+        return;
+      }
+
+      // pega a hash da URL (#access_token=...)
+      const hash = window.location.hash;
+      if (hash) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
           setCarregando(false);
+          return;
         }
-      });
-      // timeout pra nao ficar carregando pra sempre
-      setTimeout(() => setCarregando(false), 3000);
-    } else {
-      setCarregando(false);
-    }
+      }
+
+      // tenta pegar sessao existente
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setCarregando(false);
+      } else {
+        setErro("Link expirado ou inválido. Solicite um novo.");
+        setCarregando(false);
+      }
+    };
+
+    // delay pra dar tempo do supabase processar o token
+    setTimeout(processToken, 1000);
   }, []);
 
   const handleReset = async (e: React.FormEvent) => {
