@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Flame, Zap, Target, ChevronRight, Trophy, User, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,12 @@ import { getRecommendation } from "@/lib/recommendations";
 
 const Home = () => {
   const navigate = useNavigate();
+
+  // forca re-render quando volta pra essa pagina
+  const [, setRefresh] = useState(0);
+  useEffect(() => {
+    setRefresh((prev) => prev + 1);
+  }, []);
 
   // pega os dados reais do progresso do usuario
   const progress = getProgress();
