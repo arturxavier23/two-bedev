@@ -4,7 +4,7 @@ import MobileShell from "@/components/MobileShell";
 import { phasesData } from "@/data/questions";
 import { modulesData } from "@/data/modules";
 import { Button } from "@/components/ui/button";
-import { addXP, completePhase, addToHistory, addWrongAnswer } from "@/lib/progress";
+import { addXP, completePhase, addToHistory, addWrongAnswer, syncToSupabase } from "@/lib/progress";
 
 // tela do quiz - mostra as perguntas da fase selecionada
 // calcula o xp ganho no final
@@ -103,7 +103,10 @@ const Lesson = () => {
           <p className="text-purple-400 mt-2">{porcentagem}% de acerto</p>
           <p className="text-green-400 text-xl font-bold mt-5">+{xpGanho} XP</p>
           <Button
-            onClick={() => navigate(`/module/${moduleId}`)}
+            onClick={async () => {
+              await syncToSupabase();
+              navigate(`/module/${moduleId}`);
+            }}
             className="mt-10 bg-purple-600 hover:bg-purple-700 text-white px-10 py-3 rounded-full"
           >
             Continuar
