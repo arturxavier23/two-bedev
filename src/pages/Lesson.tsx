@@ -115,7 +115,13 @@ const Lesson = () => {
   return (
     <MobileShell>
       <div className="flex min-h-screen flex-col bg-slate-950 p-5 justify-center">
-
+      {/* botao de sair do quiz */}
+        <button
+          onClick={() => navigate(`/module/${moduleId}`)}
+          className="text-slate-400 text-sm mb-4 self-start"
+        >
+          ← Sair
+        </button>
        {/* barra de progresso */}
         <div className="mb-6">
           <div className="flex justify-between text-sm text-slate-400 mb-2">
