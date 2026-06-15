@@ -46,13 +46,16 @@ const Register = () => {
         return;
       }
 
-      // salva o nome e email na tabela users
       if (data.user) {
-        await supabase.from("users").insert({
+        // salva o nome na tabela users
+        const { error: userError } = await supabase.from("users").insert({
           id: data.user.id,
           name: name,
           email: email,
         });
+        if (userError) {
+          console.log("erro ao salvar usuario:", userError.message);
+        }
 
         // cria registro de progresso zerado
         await supabase.from("progress").insert({

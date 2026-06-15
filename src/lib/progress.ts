@@ -148,6 +148,12 @@ export const syncToSupabase = async (): Promise<void> => {
   if (error) {
     console.log("erro ao sincronizar:", error.message);
   }
+
+  // atualiza o nome na tabela users tambem
+  await supabase
+    .from("users")
+    .update({ name: progress.userName })
+    .eq("id", user.id);
 };
 // carrega progresso do supabase quando o usuario loga
 // se tiver dados no banco, atualiza o localStorage
