@@ -74,7 +74,11 @@ const Lesson = () => {
         const finalScore = acertou ? score + 1 : score;
         const xp = finalScore * 50;
         addXP(xp);
-        completePhase(fase.phaseId);
+        // so libera a proxima fase se acertou 70% ou mais
+        const porcentagemFinal = (finalScore / totalQuestions) * 100;
+        if (porcentagemFinal >= 70) {
+          completePhase(fase.phaseId);
+        }
         // salva no historico
         const mod = modulesData.find((m) => m.id === fase?.moduleId);
         addToHistory({
@@ -94,22 +98,45 @@ const Lesson = () => {
   // quando termina todas as perguntas mostra o resultado
   if (finished) {
     const porcentagem = Math.floor((score / totalQuestions) * 100);
+    const aprovado = porcentagem >= 70;
     return (
       <MobileShell>
         <div className="flex min-h-screen flex-col items-center justify-center bg-slate-950 p-5">
-          <p className="text-4xl mb-4">🎉</p>
-          <h1 className="text-white text-2xl font-bold">Parabéns!</h1>
+          <p className="text-4xl mb-4">{aprovado ? "🎉" : "😔"}</p>
+          <h1 className="text-white text-2xl font-bold">
+            {aprovado ? "Parabéns!" : "Quase lá!"}
+          </h1>
           <p className="text-white text-lg mt-5">{score} / {totalQuestions} corretas</p>
-          <p className="text-purple-400 mt-2">{porcentagem}% de acerto</p>
+          <p className={`mt-2 ${aprovado ? "text-purple-400" : "text-red-400"}`}>
+            {porcentagem}% de acerto {!aprovado && "(mínimo 70%)"}
+          </p>
           <p className="text-green-400 text-xl font-bold mt-5">+{xpGanho} XP</p>
+          {!aprovado && (
+            <p className="text-slate-400 text-xs mt-2">
+              Acerte pelo menos 70% para desbloquear a próxima fase
+            </p>
+          )}
           <Button
             onClick={async () => {
               await syncToSupabase();
-              navigate(`/module/${moduleId}`);
+              if (aprovado) {
+                navigate(`/module/${moduleId}`);
+              } else {
+                // reinicia o quiz pra tentar de novo
+                setCurrentIndex(0);
+                setSelected(null);
+                setScore(0);
+                setFinished(false);
+                setXpGanho(0);
+              }
             }}
-            className="mt-10 bg-purple-600 hover:bg-purple-700 text-white px-10 py-3 rounded-full"
+            className={`mt-10 text-white px-10 py-3 rounded-full ${
+              aprovado
+                ? "bg-purple-600 hover:bg-purple-700"
+                : "bg-red-600 hover:bg-red-700"
+            }`}
           >
-            Continuar
+            {aprovado ? "Continuar" : "Tentar Novamente"}
           </Button>
         </div>
       </MobileShell>
