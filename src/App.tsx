@@ -9,6 +9,7 @@ import Exercises from "./pages/Exercises";
 import History from "./pages/History";
 import Glossary from "./pages/Glossary";
 import Review from "./pages/Review";
+import ResetPassword from "./pages/ResetPassword";
 import Home from "./pages/Home";
 import LearningPath from "./pages/LearningPath";
 import ModuleMap from "./pages/ModuleMap";
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/history" element={<History />} />
           <Route path="/glossary" element={<Glossary />} />
           <Route path="/review" element={<Review />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/home" element={<Home />} />
           <Route path="/learning-path" element={<LearningPath />} />
           <Route path="/module/:moduleId" element={<ModuleMap />} />
