@@ -15,7 +15,20 @@ const ResetPassword = () => {
   const [sucesso, setSucesso] = useState(false);
   const [carregando, setCarregando] = useState(true);
 
-  // processa o token da URL quando a pagina carrega
+  // espera o supabase processar o token da URL
+  useEffect(() => {
+    if (supabase) {
+      supabase.auth.onAuthStateChange((event) => {
+        if (event === "PASSWORD_RECOVERY") {
+          setCarregando(false);
+        }
+      });
+      // timeout pra nao ficar carregando pra sempre
+      setTimeout(() => setCarregando(false), 3000);
+    } else {
+      setCarregando(false);
+    }
+  }, []);// processa o token da URL quando a pagina carrega
   useEffect(() => {
     const processToken = async () => {
       if (!supabase) {
